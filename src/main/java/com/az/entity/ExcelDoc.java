@@ -53,7 +53,7 @@ public class ExcelDoc {
 		return sheet;
 	}
 	public ArrayList<Row> getRows(String table){
-		ArrayList<Row> rows = new ArrayList<Row>();
+        ArrayList<Row> rows = new ArrayList<Row>();
 		Iterator<Row> rowIterator = this.sheet.rowIterator();
 		int counter = 0;
 		while (rowIterator.hasNext()) {
