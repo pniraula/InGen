@@ -30,23 +30,15 @@ public class FieldsTarget {
 
 				// fields
 				Element rootElement = doc.createElement("Fields");
+                Element amsDataObjectField = generateField(doc, "AMSDataObject", "Attribute", "0");
+                rootElement.appendChild(amsDataObjectField);
 
 				ArrayList<Row> rows = excelDoc.getRows(table);
 				Iterator<Row> iterator = rows.iterator();
 				while (iterator.hasNext()) {
 					Row row = iterator.next();
-					Element field = doc.createElement("Field");
-					field.setAttribute("name", Tables.fieldPrefix(table,
-							excelDoc.getValue(row, 7)));
-					Element dataType = doc.createElement("Datatype");
-					dataType.setAttribute("datatype", "11");
-					dataType.setAttribute("dataalias", "Record");
-					dataType.setAttribute("datalength", "0");
-					dataType.setAttribute("dataidentity", "no");
-					dataType.setAttribute("dataautoinc", "no");
-					dataType.setAttribute("datacurrency", "no");
-					dataType.setAttribute("datarowversion", "no");
-					field.appendChild(dataType);
+					Element field = generateField(doc, Tables.fieldPrefix(table,
+                            excelDoc.getValue(row, 7)), "Record", "11");
 					rootElement.appendChild(field);
 				}
 				recordLayout.appendChild(rootElement);
@@ -73,6 +65,22 @@ public class FieldsTarget {
 		}
 		return null;
 	}
+
+    public Element generateField(Document doc, String fieldName, String dataAlias, String type) {
+        Element field = doc.createElement("Field");
+        field.setAttribute("name", fieldName);
+        Element dataType = doc.createElement("Datatype");
+        dataType.setAttribute("datatype", type);
+        dataType.setAttribute("dataalias", dataAlias);
+        dataType.setAttribute("datalength", "0");
+        dataType.setAttribute("dataidentity", "no");
+        dataType.setAttribute("dataautoinc", "no");
+        dataType.setAttribute("datacurrency", "no");
+        dataType.setAttribute("datarowversion", "no");
+        field.appendChild(dataType);
+
+        return field;
+    }
 
 	public static String getValue(Row row, int cellNo) {
 		Cell cell = row.getCell(cellNo);

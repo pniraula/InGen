@@ -13,6 +13,9 @@
  	<bean id="excelDoc" class="com.az.entity.ExcelDoc">
  	     <constructor-arg ref="display"/>
  	</bean>
+    <bean id="sourceExcelDoc" class="com.az.entity.SourceExcelDoc">
+         <constructor-arg ref="display" />
+    </bean>
  	<bean id="fieldsResource" class="com.az.entity.FieldsResource">
  	    <property name="excelDoc" ref="excelDoc"/>
  	</bean>
@@ -29,13 +32,18 @@
  	<bean id="recordLayoutEvents" class="com.az.entity.RecordLayoutEvents">
  	    <property name="excelDoc" ref="excelDoc"/>
  	</bean>
+    <bean id="sourceFields" class="com.az.entity.SourceFields">
+        <property name="sourceExcelDoc" ref="sourceExcelDoc" />
+    </bean>
  	<bean id="schemaElements" class="com.az.entity.SchemaElements">
  	    <property name="fieldsTarget" ref="fieldsTarget"/>
  	    <property name="amsDocument" ref="amsDocument"/>
  	    <property name="excelDoc" ref="excelDoc"/>
+        <property name="sourceExcelDoc" ref="sourceExcelDoc" />
  	    <property name="fieldsResource" ref="fieldsResource"/>
  	    <property name="mapExpression" ref="mapExpression"/>
  	    <property name="recordLayoutEvents" ref="recordLayoutEvents"/>
+        <property name="sourceFields" ref="sourceFields" />
  	</bean>
  	<bean id="xmlDoc" class="com.az.entity.XmlDoc"></bean>
  	

@@ -32,13 +32,12 @@ public class MapExpression {
 			}*/
 			for(String table: tables){
 				ArrayList<Row> rows = excelDoc.getRows(table);
-				Iterator<Row> iterator = rows.iterator(); 
-				while(iterator.hasNext()) {
-					Row row = iterator.next();		
-					String val = excelDoc.getValue(row, 7);
-					mapExpressions.appendChild(createField1(val, Tables.fieldPrefix(table, val), doc, "<![CDATA[<![CDATA[null\\U+005d]>]]>"));
-					mapExpressions.appendChild(createField2("Attribute", Tables.fieldPrefix(table, val), doc, "<![CDATA[\"Y\"]]>"));
-				}
+                mapExpressions.appendChild(createField1("AMSDataObject", Tables.tablePrefix(table), doc, "\"Y\""));
+                for (Row row : rows) {
+                    String val = excelDoc.getValue(row, 7);
+                    mapExpressions.appendChild(createField1(val, Tables.fieldPrefix(table, val), doc, "\"<![CDATA[null\\U+005d]>\""));
+                    mapExpressions.appendChild(createField2("Attribute", Tables.fieldPrefix(table, val), doc, "\"Y\""));
+                }
 			}
 			System.out.println("MapExpressions generated successfully.");
 			return mapExpressions;
@@ -53,7 +52,7 @@ public class MapExpression {
 		element.setAttribute("language", "DJScript");
 		element.setAttribute("recordlayoutname", recordLayoutName);
 		element.setAttribute("fieldname", fieldName.trim());
-		element.setTextContent(value);
+		element.appendChild(document.createCDATASection(value));
 	    return element;
 	}
 	private Element createField2(String fieldName, String recordLayoutName, Document document, String value){
@@ -61,7 +60,7 @@ public class MapExpression {
 		element.setAttribute("language", "DJScript");
 		element.setAttribute("recordlayoutname", recordLayoutName);
 		element.setAttribute("fieldname", fieldName);
-		element.setTextContent(value);
+		element.appendChild(document.createCDATASection(value));
 	    return element;
 	}
 	public void setExcelDoc(ExcelDoc excelDoc){

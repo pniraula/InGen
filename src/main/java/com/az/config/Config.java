@@ -12,6 +12,9 @@ public enum Config{
 	private String outputFile;
 	private String sheet;
 	private int startAt;
+    private int sourceStartPoint;
+    private String sourceInputFile;
+    private String[] sourceSheets;
 	private String CONFIG_FILE = "./config.properties";
 	private Config(){
 		Properties props = new Properties();
@@ -29,6 +32,9 @@ public enum Config{
 		this.outputFile = props.getProperty("OUTPUT");
 		this.sheet = props.getProperty("SHEET");
 		this.startAt = Integer.valueOf(props.getProperty("START_ROW"));
+        this.sourceStartPoint = Integer.valueOf(props.getProperty("SOURCE_START_ROW"));
+        this.sourceInputFile = props.getProperty("SOURCE_INPUT");
+        this.sourceSheets = props.getProperty("SOURCE_SHEETS").split(",");
 	}
 	public String tablePrefix(String fix){
 		String str= "[AMS_DOCUMENT]"+fix;
@@ -53,4 +59,16 @@ public enum Config{
 	public int getStartPoint(){
 		return this.startAt;
 	}
+    public int getSourceStartPoint() {
+        return sourceStartPoint;
+    }
+    public String getSourceInputFile() {
+        return sourceInputFile;
+    }
+    public String[] getSourceSheets() {
+        return sourceSheets;
+    }
+    public int getStartAt() {
+        return startAt;
+    }
 }

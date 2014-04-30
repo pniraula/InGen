@@ -10,11 +10,13 @@ import com.az.config.Config;
 
 public class SchemaElements {
 	private ExcelDoc excelDoc;
+    private SourceExcelDoc sourceExcelDoc;
 	private Config CONFIG = Config.CONFIG;
 	private AmsDocument amsDocument;
 	private FieldsTarget fieldsTarget;
 	private FieldsResource fieldsResource;
 	private RecordLayoutEvents recordLayoutEvents;
+    private SourceFields sourceFields;
 	private MapExpression mapExpression;
 	private XmlDoc xmlDoc;
 	private Document document;
@@ -41,12 +43,12 @@ public class SchemaElements {
 	public Element description(){
 		//<Description><![CDATA[0.1 - COA elements not mapped; defaulting to null]]></Description>
 		Element description = document.createElement("Description");
-		description.setTextContent("<![CDATA[0.1 - COA elements not mapped; defaulting to null]]>");
+		description.appendChild(document.createCDATASection("0.1 - COA elements not mapped; defaulting to null"));
 		return description;
 	}
 	public Element variables(){
 		Element variables = document.createElement("Variables");
-		variables.setTextContent("<!-- ========Add your variables in here================-->");
+		variables.appendChild(document.createComment(" ========Add your variables in here================ "));
 		return variables;
 	}
 	public Element sources(){
@@ -54,15 +56,15 @@ public class SchemaElements {
 		Element mapSources = document.createElement("MapSources");
 		Element mapSource = document.createElement("MapSource");
 		mapSource.setAttribute("name", "MapSource1");
-		Element mapScehma = document.createElement("MapSchema");
+		Element mapSchema = document.createElement("MapSchema");
 		Element schema = sourceSchema();
 		Element recordLayouts = document.createElement("RecordLayouts");
-		for(String table: CONFIG.getTables()){
-			recordLayouts.appendChild(sourceRecords(table));
+		for(String sheetName: CONFIG.getSourceSheets()){
+			recordLayouts.appendChild(sourceRecords(sheetName));
 		}
 		schema.appendChild(recordLayouts);
-		mapScehma.appendChild(schema);
-		mapSource.appendChild(mapScehma);
+		mapSchema.appendChild(schema);
+		mapSource.appendChild(mapSchema);
 		
 		for(String table: CONFIG.getTables()){
 			mapSource.appendChild(sourceEvents(table));
@@ -78,17 +80,17 @@ public class SchemaElements {
 		schema.setAttribute("designedfor", "Source");
 		return schema;
 	}
-	private Element sourceRecords(String table){
+	private Element sourceRecords(String sheetName){
 		Element header = document.createElement("RecordLayout");
-		header.setAttribute("name", table);
-		header.setAttribute("length", "0");
+		header.setAttribute("name", sheetName);
+		header.setAttribute("length", ((Integer) sourceExcelDoc.getTotalLength(sheetName)).toString());
 		header.setAttribute("status", "0");
 		
 		Element origin = document.createElement("Origin");
 		origin.setAttribute("origintype", "0");
 		header.appendChild(origin);
 		
-		header.appendChild(fieldsResource.generate(document));
+		header.appendChild(sourceFields.generate(document, sheetName));
 		
 		Element recordLayoutOptions = document.createElement("RecordLayoutOptions");
 		Element option = document.createElement("Option");
@@ -104,14 +106,14 @@ public class SchemaElements {
 	}
 	public Element mapTarget(){
 		   Element mapTargets = document.createElement("MapTargets");
-	       Element mapTarget = document.createElement("Target");
+	       Element mapTarget = document.createElement("MapTarget");
 	       mapTarget.setAttribute("name", "MapTarget1");
 	       Element mapSchema = document.createElement("MapSchema");
 	       Element schema = document.createElement("Schema");
 	       schema.setAttribute("creator", "Admin");
 	       schema.setAttribute("dateCreated", "2005-01-13T19:15:13Z");
 	       schema.setAttribute("connectorname", "XML");
-	       schema.setAttribute("designedfor", "Target");
+	       schema.setAttribute("designedfor", "MapTarget");
 	       Element layouts = document.createElement("RecordLayouts");
 	       
 	       layouts.appendChild(amsDocument.exportFileLayout(document));
@@ -162,5 +164,10 @@ public class SchemaElements {
 	public void setMapExpression(MapExpression mapExpression){
 		this.mapExpression = mapExpression;
 	}
-	
+	public void setSourceFields(SourceFields sourceFields) {
+        this.sourceFields = sourceFields;
+    }
+    public void setSourceExcelDoc(SourceExcelDoc sourceExcelDoc) {
+        this.sourceExcelDoc = sourceExcelDoc;
+    }
 }

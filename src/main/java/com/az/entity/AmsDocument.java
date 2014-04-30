@@ -14,6 +14,7 @@ import com.az.ui.Display;
 
 public class AmsDocument {
 	private ExcelDoc excelDoc;
+    private SourceExcelDoc sourceExcelDoc;
 	private String[] tables = Config.CONFIG.getTables();
 	private Display display;
 	public AmsDocument(ExcelDoc excelDoc, Display display){
@@ -23,7 +24,7 @@ public class AmsDocument {
 	public Element generate(Document doc){
 		try {
 						
-			System.out.println("Generating Record Lyout for AMS_DOCUMENT");
+			System.out.println("Generating Record Layout for AMS_DOCUMENT");
 			Element recordLayout = doc.createElement("RecordLayout");
 			recordLayout.setAttribute("name", "AMS_DOCUMENT");
 			recordLayout.setAttribute("length", "112");
